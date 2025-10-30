@@ -48,7 +48,7 @@ public class MainAppView extends JFrame {
     // Update Book Panel Components
     private JTextField updateBookIdField, updateTitleField, updateAuthorField, updateIsbnField, updatePriceField, updateQuantityField, updateCategoryField; // Added more fields if needed
     // Consider adding fields for publisher, language if editable
-    private JButton loadBookBtn, updateBookBtn, addNewBookBtn, deleteBookBtn;
+    private JButton loadBookBtn, updateBookBtn, deleteBookBtn;
 
     // Info Panel Components
     private JTable customerTable, supplierTable, transactionTable;
@@ -206,8 +206,8 @@ public class MainAppView extends JFrame {
 
         JPanel categoryPanel = createFilterSection("Category",
                 new String[]{"Rom-Com", "Action & Adventure", "Mystery", "Thriller",
-                        "Science Fiction", "Fantasy", "Horror", "Biography",
-                        "Self-Help", "History", "Poetry", "Drama", "Children's Books"});
+                        "Science-Fiction", "Fantasy", "Horror", "Biography",
+                        "Self-Help", "History", "Poetry", "Drama", "Children's Book"});
         filterContent.add(categoryPanel); // Add to content panel
 
         // Price filter fields
@@ -244,7 +244,7 @@ public class MainAppView extends JFrame {
         // filterComponents.put("toYear", toYearField);
         // filterContent.add(yearPanel); // Add to content panel
 
-        // Add checkboxes from sections to the map *after* creating them
+        // Add checkboxes from sections to the map after creating them
         collectFilterCheckBoxes(languagePanel); // Collects checkboxes from languagePanel
         collectFilterCheckBoxes(categoryPanel); // Collects checkboxes from categoryPanel
 
@@ -387,7 +387,7 @@ public class MainAppView extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
         loadBookBtn = new JButton("Load Book"); buttonPanel.add(loadBookBtn);
         updateBookBtn = new JButton("Update Book"); buttonPanel.add(updateBookBtn);
-        addNewBookBtn = new JButton("Add New Book"); buttonPanel.add(addNewBookBtn);
+        //addNewBookBtn = new JButton("Add New Book"); buttonPanel.add(addNewBookBtn);
         deleteBookBtn = new JButton("Delete Book"); buttonPanel.add(deleteBookBtn);
 
         gbc.gridx = 0; gbc.gridy = yPos; // Place button panel below fields
@@ -610,7 +610,7 @@ public class MainAppView extends JFrame {
     public JTextField getUpdateCategoryField() { return updateCategoryField; }
     public JButton getLoadBookBtn() { return loadBookBtn; }
     public JButton getUpdateBookBtn() { return updateBookBtn; }
-    public JButton getAddNewBookBtn() { return addNewBookBtn; }
+   // public JButton getAddNewBookBtn() { return addNewBookBtn; }
     public JButton getDeleteBookBtn() { return deleteBookBtn; }
 
     public JButton getShowAllCustomersBtn() { return showAllCustomersBtn; }
@@ -657,4 +657,3 @@ public class MainAppView extends JFrame {
         JOptionPane.showMessageDialog(this, message, title, type);
     }
 }
-
