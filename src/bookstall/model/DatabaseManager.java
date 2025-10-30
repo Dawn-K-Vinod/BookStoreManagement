@@ -1,4 +1,4 @@
-    package bookstall.model;
+package bookstall.model;
 
     import javax.swing.*;
     import java.sql.*;
@@ -7,8 +7,8 @@
     import java.util.Map;
     import java.math.BigDecimal;
     import java.util.UUID;
-
-
+import java.sql.*
+;
     /**
      * Model layer component handling all CRUD and data access logic using JDBC.
      */
@@ -114,7 +114,11 @@
 
         // --- addBook Method ---
         public boolean addBook(Book book) {
-            if (!validateBook(book)) return false;
+            if (!validateBook(book)) {
+            	
+            	JOptionPane.showMessageDialog(null, "Validation failed! The book data is invalid.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+            	return false;
+            }
             String sql = "INSERT INTO Books (bookId, ISBN, title, author, publisher, price, quantity, genre, language) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             boolean success = false;
             try (Connection conn = getConnection();
@@ -138,9 +142,9 @@
         // --- updateBook Method ---
         public boolean updateBook(Book book) {
              if (book.getBookId() == null || book.getBookId().trim().isEmpty()) {
-                  JOptionPane.showMessageDialog(null, "Cannot update: Book ID is missing.", "Update Error", JOptionPane.ERROR_MESSAGE);
-                  return false;
-             }
+                JOptionPane.showMessageDialog(null, "Cannot update: Book ID is missing.", "Update Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
             if (!validateBook(book)) return false;
             String sql = "UPDATE Books SET ISBN = ?, title = ?, author = ?, publisher = ?, price = ?, quantity = ?, genre = ?, language = ? WHERE bookId = ?";
             boolean success = false;
@@ -240,7 +244,7 @@
                  BigDecimal totalAmount = bookPrice.multiply(BigDecimal.valueOf(quantity));
 
                  // 4. Insert transaction record
-                 String insertSql = "INSERT INTO Transactions (transactionId, customerId, bookId, quantity, totalAmout, dateTime) VALUES (?, ?, ?, ?, ?, NOW())";
+                 String insertSql = "INSERT INTO Transactions (transactionId, customerId, bookId, quantity, totalAmount, dateTime) VALUES (?, ?, ?, ?, ?, NOW())";
                  try (PreparedStatement insertPstmt = conn.prepareStatement(insertSql)) {
                      insertPstmt.setString(1, transactionId);
                      insertPstmt.setString(2, customerId);
@@ -321,7 +325,7 @@
         // --- getAllTransactions Method ---
         public List<Transaction> getAllTransactions() {
             List<Transaction> transactions = new ArrayList<>();
-            String sql = "SELECT transactionId, customerId, bookId, quantity, totalAmout, dateTime FROM Transactions ORDER BY dateTime DESC";
+            String sql = "SELECT transactionId, customerId, bookId, quantity, totalAmount, dateTime FROM Transactions ORDER BY dateTime DESC";
             try (Connection conn = getConnection();
                  PreparedStatement pstmt = conn.prepareStatement(sql);
                  ResultSet rs = pstmt.executeQuery()) {
@@ -331,7 +335,7 @@
                             rs.getString("customerId"),
                             rs.getString("bookId"),
                             rs.getInt("quantity"),
-                            rs.getDouble("totalAmout"),
+                            rs.getDouble("totalAmount"),
                             rs.getTimestamp("dateTime")
                     );
                     transactions.add(transaction);
@@ -480,5 +484,3 @@
              e.printStackTrace();
          }
     }
-    
-
