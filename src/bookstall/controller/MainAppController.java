@@ -5,8 +5,14 @@ import bookstall.model.DatabaseManager;
 import bookstall.view.MainAppView;
 
 import javax.swing.*;
+
+import com.mysql.cj.xdevapi.Statement;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -180,20 +186,33 @@ public class MainAppController {
         });
 
         // Add New Book
-        view.getAddNewBookBtn().addActionListener(e -> {
-            view.clearUpdateFields();
-            view.showMessage("Ready to add new book. Enter details and press Update.", "New Entry Mode", JOptionPane.INFORMATION_MESSAGE);
-        });
+//        view.getAddNewBookBtn().addActionListener(e -> {
+//            view.clearUpdateFields();
+//            view.showMessage("Ready to add new book. Enter details and press Update.", "New Entry Mode", JOptionPane.INFORMATION_MESSAGE);
+//        });
 
         // Update Book (used for both Update and Add)
         view.getUpdateBookBtn().addActionListener(e -> {
             Book book = view.getBookFromUpdateFields();
-            if (book.getBookId() == null || book.getBookId().isEmpty()) {
-                // Assume new book since ID is empty
-                model.addBook(book);
-            } else {
-                model.updateBook(book);
-            }
+            try {
+				Connection con = DatabaseManager.getConnection();
+				java.sql.PreparedStatement ps = con.prepareStatement("Select * from books where bookId = ?");
+				ps.setString(1, book.getBookId());
+				ResultSet rs = ps.executeQuery();
+				
+				if (!rs.next()) {
+	                // Assume new book since ID is empty
+	                model.addBook(book);
+	            } else {
+	                model.updateBook(book);
+	            }
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}            
+            
+    
         });
 
         // Delete Book
